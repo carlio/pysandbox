@@ -279,6 +279,11 @@ def _proxy():
             return createReadOnlyDict(value)
         elif isinstance(value, OBJECT_TYPES):
             return createReadOnlyObject(value)
+        elif str(value.__class__) == "<type 'code'>":
+            # This is a horrible horrible hack; it should be able to compare with the actual
+            # "code" type. However no proxy is needed as code objects are immutable; see
+            # http://docs.python.org/reference/datamodel.html
+            return value
         else:
             raise SandboxError("Unable to proxy a value of type %s" % type(value))
     return proxy
